@@ -1,0 +1,32 @@
+---
+services:
+  freqtrade-strategy001:
+    image: freqtradeorg/freqtrade:develop
+    restart: unless-stopped
+    container_name: freqtrade-strategy001
+    volumes:
+      - './user_data:/freqtrade/user_data'
+      - './bitbank_sync.py:/home/ftuser/.local/lib/python3.14/site-packages/ccxt/bitbank.py'
+      - './bitbank_async.py:/home/ftuser/.local/lib/python3.14/site-packages/ccxt/async_support/bitbank.py'
+    ports:
+      - '0.0.0.0:8080:8080'
+    command: >
+      trade
+      --logfile /freqtrade/user_data/logs/freqtrade-strategy001.log
+      --config /freqtrade/user_data/config-strategy001.json
+      --strategy Strategy001
+    env_file:
+      - .env
+  #freqtrade-e0v1e6:
+  #  image: freqtradeorg/freqtrade:develop
+  #  restart: unless-stopped
+  #  container_name: freqtrade-e0v1e6
+  #  volumes:
+  #    - './user_data:/freqtrade/user_data'
+  #  ports:
+  #    - '0.0.0.0:8081:8080'
+  #  command: >
+  #    trade
+  #    --logfile /freqtrade/user_data/logs/freqtrade-e0v1e6.log
+  #    --config /freqtrade/user_data/config-e0v1e6.json
+  #    --strategy E0V1E_6

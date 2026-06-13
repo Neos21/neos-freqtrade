@@ -1,0 +1,135 @@
+{
+  "$schema": "https://schema.freqtrade.io/schema.json",
+  
+  // 同時保有ポジション数の上限。
+  // 資金配分とリスクの土台になるので、まず最初に確認する項目。
+  "max_open_trades": 3,
+  
+  // 取引の基軸通貨。
+  // whitelist/pairlist 側のペアと整合している必要がある。
+  "stake_currency": "JPY",
+  
+  // 1トレードあたりの投入額（固定）。
+  // 例: 20 USDT × max_open_trades 3 = 最大60 USDT を同時使用。
+  "stake_amount": 7000,
+  
+  // 口座残高のうちトレードに使う比率。
+  // 1.0 に近いほど資金効率は上がるが、余力が減る。
+  "tradable_balance_ratio": 0.99,
+  
+  // 表示用通貨（UI表示のみ）。
+  "fiat_display_currency": "USD",
+  
+  // true: ドライラン（仮想売買）。
+  // 実運用前は true を維持するのが安全。
+  "dry_run": true,
+  
+  // ドライラン時の初期仮想残高。
+  "dry_run_wallet": 35000,
+  
+  // 終了時に未約定注文をキャンセルするか。
+  "cancel_open_orders_on_exit": false,
+  
+  // 取引モード（spot / futures など）。
+  "trading_mode": "spot",
+  "margin_mode": "",
+  
+  // 指値注文のタイムアウト設定。
+  "unfilledtimeout": {
+    "entry": 10,
+    "exit": 10,
+    "exit_timeout_count": 0,
+    "unit": "minutes"
+  },
+  
+  // エントリー価格の決定ルール。
+  "entry_pricing": {
+    "price_side": "other",
+    "use_order_book": false,
+    "order_book_top": 1
+  },
+  
+  // エグジット価格の決定ルール。
+  "exit_pricing": {
+    "price_side": "other",
+    "use_order_book": false,
+    "order_book_top": 1
+  },
+  
+  "exchange": {
+    "name": "bitbank",
+    
+    // 実運用時のみ設定。Git管理には絶対に含めない。
+    "key": "",
+    "secret": "",
+    
+    "ccxt_config": {},
+    "ccxt_async_config": {},
+    
+    // pairlists を使う場合は通常ここは空でOK。
+    "pair_whitelist": [],
+    "pair_blacklist": [],
+    
+    // WebSocket利用可否。false はREST中心で安定寄り。
+    "enable_ws": false
+  },
+  
+  // 取引対象ペアの自動選定ルール。
+  // VolumePairList は出来高上位を一定数選ぶ。
+  "pairlists": [
+    {
+      "method": "VolumePairList",
+      "number_assets": 20,
+      "sort_key": "quoteVolume",
+      "min_value": 0,
+      "refresh_period": 1800
+    }
+  ],
+  
+  "telegram": {
+    "enabled": false,
+    "token": "",
+    "chat_id": ""
+  },
+  
+  "api_server": {
+    "enabled": true,
+    
+    // Docker で外部公開する場合は 0.0.0.0 で待ち受け。
+    "listen_ip_address": "0.0.0.0",
+    
+    // コンテナ内ポート。複数Bot運用時は docker-compose の host 側ポートで分離する。
+    "listen_port": 8080,
+    
+    "verbosity": "error",
+    "enable_openapi": false,
+    
+    // 認証情報は実運用で必ず個別値に変更。
+    "jwt_secret_key": "【JWT シークレットキー】",
+    "ws_token": "【トークン】",
+    "CORS_origins": [],
+    "username": "【WebUI ログイン時のユーザ名】",
+    "password": "【WebUI ログイン時のパスワード】"
+  },
+  
+  // Bot識別名（UI表示やログ識別で重要）。
+  // 複数Botを同時に動かす場合は一意にする。
+  "bot_name": "freqtrade-example",
+  
+  // 起動直後の状態（running / stopped）。
+  "initial_state": "running",
+  
+  // UI/RESTからの強制エントリー許可。
+  "force_entry_enable": false,
+  
+  "internals": {
+    // メインループ間隔（秒）。
+    "process_throttle_secs": 5
+  },
+  
+  // 取引DB。複数Bot運用時は必ず分離する。
+  // 例:
+  // - Strategy001: tradesv3-strategy001.sqlite
+  // - E0V1E_6:    tradesv3-e0v1e6.sqlite
+  "db_url": "sqlite:////freqtrade/user_data/tradesv3-example.sqlite"
+}
